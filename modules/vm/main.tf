@@ -37,6 +37,15 @@ resource "azurerm_dns_a_record" "main" {
   records             = var.lb_type == null ? [azurerm_network_interface.main.private_ip_address] : azurerm_lb.main[*].private_ip_address
 }
 
+resource "azurerm_public_ip" "main" {
+  count               = var.lb_type == "public" ? 1 : 0
+  name                = "${var.component_name}-${var.env}-lb"
+  location            = data.azurerm_resource_group.main.location
+  resource_group_name = data.azurerm_resource_group.main.name
+  allocation_method   = "Static"
+}
+
+
 resource "azurerm_lb" "main" {
   count               = var.lb_type != null ? 1 : 0
   name                = "${var.component_name}-${var.env}"
@@ -47,6 +56,7 @@ resource "azurerm_lb" "main" {
     name                          = "${var.component_name}-${var.env}"
     private_ip_address_allocation = var.lb_type == "private" ? "Dynamic" : null
     subnet_id                     = var.lb_type == "private" ? "/subscriptions/3f2e42e1-ca06-4a99-8c56-be8d8ba306db/resourceGroups/denmark-east-rg/providers/Microsoft.Network/virtualNetworks/workstation-vnet/subnets/default" : null
+    public_ip_address_id          = var.lb_type == "public" ? azurerm_public_ip.main[0].id : null
   }
 
 }
@@ -63,6 +73,7 @@ resource "azurerm_lb_backend_address_pool_address" "main" {
   backend_address_pool_id             = azurerm_lb_backend_address_pool.main[0].id
   ip_address                          = azurerm_network_interface.main.private_ip_address
   virtual_network_id                  = "/subscriptions/3f2e42e1-ca06-4a99-8c56-be8d8ba306db/resourceGroups/denmark-east-rg/providers/Microsoft.Network/virtualNetworks/workstation-vnet"
+
 }
 
 resource "azurerm_lb_rule" "main" {
