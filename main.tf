@@ -41,5 +41,5 @@ module "apps" {
 # }
 
 output "lb" {
-  value = module.apps.lb
+  value = module.apps
 }
