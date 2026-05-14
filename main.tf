@@ -20,24 +20,26 @@ module "apps" {
   rgname   = var.rgname
   image_id = var.image_id
   env      = var.env
-  lb_type        = "private"
+  lb_type  = "private"
 
   depends_on = [module.db]
 }
 
 
 
-# module "ui" {
-#   source = "./modules/vm"
-#
-#   for_each       = var.ui
-#   component_name = each.key
-#   lb_type        = "public"
-#
-#   rgname   = var.rgname
-#   image_id = var.image_id
-#   env      = var.env
-#
-#   depends_on = [module.apps]
-# }
+module "ui" {
+  source = "./modules/vm"
+
+  for_each       = var.ui
+  component_name = each.key
+  port           = each.value["port"]
+
+
+  rgname   = var.rgname
+  image_id = var.image_id
+  env      = var.env
+  lb_type  = "public"
+
+  depends_on = [module.apps]
+}
 
