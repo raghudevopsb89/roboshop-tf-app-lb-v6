@@ -24,6 +24,8 @@ apps = {
 }
 
 ui = {
-  frontend = {}
+  frontend = {
+    port = 80
+  }
 }
 
