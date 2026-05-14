@@ -45,8 +45,8 @@ resource "azurerm_lb" "main" {
 
   frontend_ip_configuration {
     name                          = "${var.component_name}-${var.env}"
-    private_ip_address_allocation = "Dynamic"
-    subnet_id                     = "/subscriptions/3f2e42e1-ca06-4a99-8c56-be8d8ba306db/resourceGroups/denmark-east-rg/providers/Microsoft.Network/virtualNetworks/workstation-vnet/subnets/default"
+    private_ip_address_allocation = var.lb_type == "private" ? "Dynamic" : null
+    subnet_id                     = var.lb_type == "private" ? "/subscriptions/3f2e42e1-ca06-4a99-8c56-be8d8ba306db/resourceGroups/denmark-east-rg/providers/Microsoft.Network/virtualNetworks/workstation-vnet/subnets/default" : null
   }
 
 }
