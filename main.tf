@@ -40,3 +40,6 @@ module "apps" {
 #   depends_on = [module.apps]
 # }
 
+output "lb" {
+  value = module.apps.lb
+}
