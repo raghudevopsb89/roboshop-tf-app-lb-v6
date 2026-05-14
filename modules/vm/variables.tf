@@ -8,3 +8,5 @@ variable "lb_type" {
 variable "port" {
   default = null
 }
+variable "vm_count" {}
+

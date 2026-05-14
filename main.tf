@@ -7,6 +7,7 @@ module "db" {
   rgname   = var.rgname
   image_id = var.image_id
   env      = var.env
+  vm_count = 1
 }
 
 
@@ -21,6 +22,7 @@ module "apps" {
   image_id = var.image_id
   env      = var.env
   lb_type  = "private"
+  vm_count = 2
 
   depends_on = [module.db]
 }
@@ -39,6 +41,7 @@ module "ui" {
   image_id = var.image_id
   env      = var.env
   lb_type  = "public"
+  vm_count = 2
 
   depends_on = [module.apps]
 }

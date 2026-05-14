@@ -1,20 +1,22 @@
 resource "azurerm_network_interface" "main" {
-  name                = "${var.component_name}-${var.env}-nic"
+  count               = var.vm_count
+  name                = "${var.component_name}-${var.env}-nic${count.index}"
   location            = data.azurerm_resource_group.main.location
   resource_group_name = data.azurerm_resource_group.main.name
 
   ip_configuration {
-    name                          = "${var.component_name}-${var.env}-nic"
+    name                          = "${var.component_name}-${var.env}-nic${count.index}"
     subnet_id                     = "/subscriptions/3f2e42e1-ca06-4a99-8c56-be8d8ba306db/resourceGroups/denmark-east-rg/providers/Microsoft.Network/virtualNetworks/workstation-vnet/subnets/default"
     private_ip_address_allocation = "Dynamic"
   }
 }
 
 resource "azurerm_linux_virtual_machine" "main" {
-  name                            = "${var.component_name}-${var.env}"
+  count                           = var.vm_count
+  name                            = "${var.component_name}-${var.env}-${count.index}"
   location                        = data.azurerm_resource_group.main.location
   resource_group_name             = data.azurerm_resource_group.main.name
-  network_interface_ids           = [azurerm_network_interface.main.id]
+  network_interface_ids           = [azurerm_network_interface.main[count.index].id]
   size                            = "Standard_B1s"
   admin_password                  = "DevOps@123456"
   admin_username                  = "devops"
@@ -34,7 +36,7 @@ resource "azurerm_dns_a_record" "main" {
   zone_name           = "rdevopsb89.online"
   resource_group_name = data.azurerm_resource_group.main.name
   ttl                 = 30
-  records             = var.lb_type == null ? [azurerm_network_interface.main.private_ip_address] : azurerm_lb.main[*].private_ip_address
+  records             = var.lb_type == null ? [azurerm_network_interface.main[count.index].private_ip_address] : azurerm_lb.main[*].private_ip_address
 }
 
 resource "azurerm_public_ip" "main" {
@@ -67,22 +69,22 @@ resource "azurerm_lb_backend_address_pool" "main" {
   name            = "BackEndAddressPool"
 }
 
-resource "azurerm_lb_backend_address_pool_address" "main" {
-  count                               = var.lb_type != null ? 1 : 0
-  name                                = "${var.component_name}-${var.env}"
-  backend_address_pool_id             = azurerm_lb_backend_address_pool.main[0].id
-  ip_address                          = azurerm_network_interface.main.private_ip_address
-  virtual_network_id                  = "/subscriptions/3f2e42e1-ca06-4a99-8c56-be8d8ba306db/resourceGroups/denmark-east-rg/providers/Microsoft.Network/virtualNetworks/workstation-vnet"
-
-}
-
-resource "azurerm_lb_rule" "main" {
-  count                          = var.lb_type != null ? 1 : 0
-  loadbalancer_id                = azurerm_lb.main[0].id
-  name                           = "LBRule"
-  protocol                       = "Tcp"
-  frontend_port                  = var.port
-  backend_port                   = var.port
-  frontend_ip_configuration_name = "${var.component_name}-${var.env}"
-}
+# resource "azurerm_lb_backend_address_pool_address" "main" {
+#   count                               = var.lb_type != null ? 1 : 0
+#   name                                = "${var.component_name}-${var.env}"
+#   backend_address_pool_id             = azurerm_lb_backend_address_pool.main[0].id
+#   ip_address                          = azurerm_network_interface.main.private_ip_address
+#   virtual_network_id                  = "/subscriptions/3f2e42e1-ca06-4a99-8c56-be8d8ba306db/resourceGroups/denmark-east-rg/providers/Microsoft.Network/virtualNetworks/workstation-vnet"
+#
+# }
+#
+# resource "azurerm_lb_rule" "main" {
+#   count                          = var.lb_type != null ? 1 : 0
+#   loadbalancer_id                = azurerm_lb.main[0].id
+#   name                           = "LBRule"
+#   protocol                       = "Tcp"
+#   frontend_port                  = var.port
+#   backend_port                   = var.port
+#   frontend_ip_configuration_name = "${var.component_name}-${var.env}"
+# }
 
