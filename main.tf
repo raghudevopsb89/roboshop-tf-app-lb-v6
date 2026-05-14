@@ -15,11 +15,12 @@ module "apps" {
 
   for_each       = var.apps
   component_name = each.key
-  lb_type        = "private"
+  port           = each.value["port"]
 
   rgname   = var.rgname
   image_id = var.image_id
   env      = var.env
+  lb_type        = "private"
 
   depends_on = [module.db]
 }
@@ -40,6 +41,3 @@ module "apps" {
 #   depends_on = [module.apps]
 # }
 
-output "lb" {
-  value = module.apps
-}

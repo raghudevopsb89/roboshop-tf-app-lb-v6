@@ -11,7 +11,9 @@ db = {
 }
 
 apps = {
-  catalogue    = {}
+  catalogue    = {
+    port = 8002
+  }
   # user         = {}
   # cart         = {}
   # shipping     = {}

@@ -5,4 +5,6 @@ variable "env" {}
 variable "lb_type" {
   default = null
 }
-
+variable "port" {
+  default = null
+}

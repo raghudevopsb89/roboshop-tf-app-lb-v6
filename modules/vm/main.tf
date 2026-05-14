@@ -65,6 +65,13 @@ resource "azurerm_lb_backend_address_pool_address" "main" {
   virtual_network_id                  = "/subscriptions/3f2e42e1-ca06-4a99-8c56-be8d8ba306db/resourceGroups/denmark-east-rg/providers/Microsoft.Network/virtualNetworks/workstation-vnet"
 }
 
-output "lb" {
-  value = azurerm_lb.main
+resource "azurerm_lb_rule" "main" {
+  count                          = var.lb_type != null ? 1 : 0
+  loadbalancer_id                = azurerm_lb.main[0].id
+  name                           = "LBRule"
+  protocol                       = "Tcp"
+  frontend_port                  = var.port
+  backend_port                   = var.port
+  frontend_ip_configuration_name = "${var.component_name}-${var.env}"
 }
+
