@@ -36,7 +36,7 @@ resource "azurerm_dns_a_record" "main" {
   zone_name           = "rdevopsb89.online"
   resource_group_name = data.azurerm_resource_group.main.name
   ttl                 = 30
-  records             = var.lb_type == null ? [azurerm_network_interface.main[count.index].private_ip_address] : azurerm_lb.main[*].private_ip_address
+  records             = var.lb_type == null ? [azurerm_network_interface.main[0].private_ip_address] : azurerm_lb.main[*].private_ip_address
 }
 
 resource "azurerm_public_ip" "main" {
