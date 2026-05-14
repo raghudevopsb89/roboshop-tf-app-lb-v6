@@ -34,7 +34,7 @@ apps = {
   # }
   # payment      = {
   #   port = 8005
-  }
+  #}
 }
 
 ui = {
