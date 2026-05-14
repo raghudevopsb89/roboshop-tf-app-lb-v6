@@ -51,6 +51,12 @@ resource "azurerm_lb" "main" {
 
 }
 
+resource "azurerm_lb_backend_address_pool" "main" {
+  loadbalancer_id = azurerm_lb.main.id
+  name            = "BackEndAddressPool"
+}
+
+
 output "lb" {
   value = azurerm_lb.main
 }
