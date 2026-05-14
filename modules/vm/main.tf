@@ -57,6 +57,12 @@ resource "azurerm_lb_backend_address_pool" "main" {
   name            = "BackEndAddressPool"
 }
 
+resource "azurerm_lb_backend_address_pool_address" "main" {
+  count                               = var.lb_type != null ? 1 : 0
+  name                                = "${var.component_name}-${var.env}"
+  backend_address_pool_id             = azurerm_lb_backend_address_pool.main.id
+  ip_address                          = azurerm_network_interface.main.id
+}
 
 output "lb" {
   value = azurerm_lb.main
