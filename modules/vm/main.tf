@@ -52,7 +52,8 @@ resource "azurerm_lb" "main" {
 }
 
 resource "azurerm_lb_backend_address_pool" "main" {
-  loadbalancer_id = azurerm_lb.main.id
+  count           = var.lb_type != null ? 1 : 0
+  loadbalancer_id = azurerm_lb.main[0].id
   name            = "BackEndAddressPool"
 }
 
