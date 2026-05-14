@@ -10,22 +10,22 @@ module "db" {
 }
 
 
-# module "apps" {
-#   source = "./modules/vm"
-#
-#   for_each       = var.apps
-#   component_name = each.key
-#   lb_type        = "private"
-#
-#   rgname   = var.rgname
-#   image_id = var.image_id
-#   env      = var.env
-#
-#   depends_on = [module.db]
-# }
-#
-#
-#
+module "apps" {
+  source = "./modules/vm"
+
+  for_each       = var.apps
+  component_name = each.key
+  lb_type        = "private"
+
+  rgname   = var.rgname
+  image_id = var.image_id
+  env      = var.env
+
+  depends_on = [module.db]
+}
+
+
+
 # module "ui" {
 #   source = "./modules/vm"
 #

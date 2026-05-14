@@ -37,3 +37,11 @@ resource "azurerm_dns_a_record" "main" {
   records             = [azurerm_network_interface.main.private_ip_address]
 }
 
+
+resource "azurerm_lb" "main" {
+  count               = var.lb_type != null ? 1 : 0
+  name                = "${var.component_name}-${var.env}"
+  location            = data.azurerm_resource_group.main.location
+  resource_group_name = data.azurerm_resource_group.main.name
+}
+
