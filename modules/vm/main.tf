@@ -71,7 +71,7 @@ resource "azurerm_lb_backend_address_pool" "main" {
 
 resource "azurerm_lb_backend_address_pool_address" "main" {
   count                               = var.lb_type != null ? var.vm_count : 0
-  name                                = "${var.component_name}-${var.env}"
+  name                                = "${var.component_name}-${var.env}-${count.index}"
   backend_address_pool_id             = azurerm_lb_backend_address_pool.main[0].id
   ip_address                          = azurerm_network_interface.main[count.index].private_ip_address
   virtual_network_id                  = "/subscriptions/3f2e42e1-ca06-4a99-8c56-be8d8ba306db/resourceGroups/denmark-east-rg/providers/Microsoft.Network/virtualNetworks/workstation-vnet"
