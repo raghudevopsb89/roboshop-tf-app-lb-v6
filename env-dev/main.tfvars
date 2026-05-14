@@ -12,13 +12,13 @@ db = {
 
 apps = {
   catalogue    = {}
-  user         = {}
-  cart         = {}
-  shipping     = {}
-  order        = {}
-  notification = {}
-  ratings      = {}
-  payment      = {}
+  # user         = {}
+  # cart         = {}
+  # shipping     = {}
+  # order        = {}
+  # notification = {}
+  # ratings      = {}
+  # payment      = {}
 }
 
 ui = {
